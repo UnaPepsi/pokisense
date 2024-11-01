@@ -1,0 +1,20 @@
+main: pk.guimx.PokiSense
+version: 1.0.0
+name: PokiSense
+author: guimx
+api-version: 1.8.8
+commands:
+  headed:
+    description: 'big headed fan!!!'
+  fly:
+    description: 'makes you explode'
+  connect:
+    description: '¯\_(ツ)_/¯'
+  glow:
+      description: 'brillo'
+  cglow:
+    description: 'glowv2'
+  staff:
+    description: 'askdjgasyudg812o'
+  panic:
+    description: 'PANIC!!!!'
