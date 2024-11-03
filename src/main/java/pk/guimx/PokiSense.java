@@ -16,6 +16,7 @@ public class PokiSense extends JavaPlugin {
         getCommand("cglow").setExecutor(mainCommand);
         getCommand("staff").setExecutor(mainCommand);
         getCommand("panic").setExecutor(mainCommand);
+        getCommand("block").setExecutor(mainCommand);
         Bukkit.getConsoleSender().sendMessage("____            _      _   ____                              \n" +
                 " |  _ \\    ___   | | __ (_) / ___|    ___   _ __    ___    ___ \n" +
                 " | |_) |  / _ \\  | |/ / | | \\___ \\   / _ \\ | '_ \\  / __|  / _ \\\n" +

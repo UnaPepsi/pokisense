@@ -25,5 +25,7 @@ If not used with caution, this may get you **banned** from servers, if you end u
   - Attempts to apply a glow effect to each player via Lunar Client API.
 - `/cglow`
   - Same as `/glow` but takes the name copied in the clipboard.
+- `/block [slot]`
+  - Sets the given slot to a random colored wool infinitely. Slot must be in range of 0-9. Don't specify a slot to cancel the infinite loop.
 - `/panic`
   - Disables Staff Mods, sets the Gamemode to survival, disables flight, and removes all glow effects from all players.

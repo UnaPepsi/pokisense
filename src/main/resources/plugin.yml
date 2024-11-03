@@ -1,5 +1,5 @@
 main: pk.guimx.PokiSense
-version: 1.0.0
+version: 1.1.0
 name: PokiSense
 author: guimx
 api-version: 1.8.8
@@ -18,3 +18,5 @@ commands:
     description: 'askdjgasyudg812o'
   panic:
     description: 'PANIC!!!!'
+  block:
+    description: 'asdjlhaskjld'

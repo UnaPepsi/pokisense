@@ -11,31 +11,34 @@ import net.minecraft.server.v1_8_R3.ChatComponentText;
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
 
 public class MainCommand implements CommandExecutor {
     private PokiSense pokiSense;
     private Cache cache;
     private ArrayList<UUID> playersToGlow;
     private BukkitRunnable glowPlayersLoop;
+    private boolean setGhostBlock;
+    private Random random = new Random();
     public MainCommand(PokiSense pokiSense){
         this.pokiSense = pokiSense;
         cache = new Cache();
         playersToGlow = new ArrayList<>();
+        setGhostBlock = false;
         glowPlayersLoop = new BukkitRunnable(){
             @Override
             public void run() {
@@ -50,7 +53,7 @@ public class MainCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args){
         Collection<? extends Player> players = Bukkit.getOnlinePlayers();
-        sender.sendMessage(command.getName());
+        //sender.sendMessage(command.getName());
         switch (command.getName().toLowerCase()){
             case "headed":
                 players.forEach(p -> {
@@ -194,7 +197,23 @@ public class MainCommand implements CommandExecutor {
                 });
                 glowPlayersLoop.cancel();
                 Apollo.getModuleManager().getModule(GlowModule.class).resetGlow(Recipients.ofEveryone());
-
+            case "block":
+                if (args.length == 0 || (Integer.parseInt(args[0]) > 8 && Integer.parseInt(args[0]) < 0)){
+                    setGhostBlock = false;
+                    return false;
+                }
+                setGhostBlock = true;
+                new BukkitRunnable(){
+                    @Override
+                    public void run() {
+                        players.forEach(p -> {
+                            if (!setGhostBlock) {
+                                cancel();
+                            }
+                            p.getInventory().setItem(Integer.parseInt(args[0]), new ItemStack(Material.WOOL,64,(byte)random.nextInt(16)));
+                        });
+                    }
+                }.runTaskTimer(pokiSense,0,1);
         }
         return true;
     }
