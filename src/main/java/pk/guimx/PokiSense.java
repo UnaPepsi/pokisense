@@ -10,6 +10,7 @@ public class PokiSense extends JavaPlugin {
         MainCommand mainCommand = new MainCommand(this);
         //I don't want prefixes
         getCommand("headed").setExecutor(mainCommand);
+        getCommand("speed").setExecutor(mainCommand);
         getCommand("fly").setExecutor(mainCommand);
         getCommand("connect").setExecutor(mainCommand);
         getCommand("glow").setExecutor(mainCommand);
@@ -17,6 +18,7 @@ public class PokiSense extends JavaPlugin {
         getCommand("staff").setExecutor(mainCommand);
         getCommand("panic").setExecutor(mainCommand);
         getCommand("block").setExecutor(mainCommand);
+        getCommand("kb").setExecutor(mainCommand);
         Bukkit.getConsoleSender().sendMessage("____            _      _   ____                              \n" +
                 " |  _ \\    ___   | | __ (_) / ___|    ___   _ __    ___    ___ \n" +
                 " | |_) |  / _ \\  | |/ / | | \\___ \\   / _ \\ | '_ \\  / __|  / _ \\\n" +

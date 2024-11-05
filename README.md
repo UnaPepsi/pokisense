@@ -13,19 +13,23 @@ If not used with caution, this may get you **banned** from servers, if you end u
 ### At the moment this client only works on Windows.<br><br>
 
 - `/connect <server_ip> [delay_ticks]`
-  - Connects to the target server with a delay using the [glitch](https://bugs.mojang.com/browse/MC-74984) mentioned.<br>
+  - Connects to the target server with a delay using the [glitch](https://bugs.mojang.com/browse/MC-74984) mentioned. Default delay: **10**<br>
   _**Must have Lunar Client launched beforehand.**_
 - `/staff`
   - Attempts to enable Lunar Staff Mods (X-Ray).
 - `/headed`
   - Toggles fake Creative Mode with flight disabled.
 - `/fly [speed]`
-  - Toggles flight. Speed goes from 0 to 10 counting decimals.
+  - Toggles flight. Speed goes from 0 to 10 counting decimals. Set no arguments to toggle off.
+- `/speed [speed]`
+  - Sets walking speed. Speed goes from 0 to 10 counting decimals. Set no arguments go back to normal speed.
 - `/glow <premiumPlayer...>`
   - Attempts to apply a glow effect to each player via Lunar Client API.
 - `/cglow`
   - Same as `/glow` but takes the name copied in the clipboard.
 - `/block [slot]`
-  - Sets the given slot to a random colored wool infinitely. Slot must be in range of 0-9. Don't specify a slot to cancel the infinite loop.
+  - Sets the given slot to a random colored wool infinitely. Slot must be in range of 0-9. Set no arguments to cancel the infinite loop.
+- `/kb [x] [z] [apothem]`
+  - Spawns a border at the given coordinates with a specified apothem using Lunar Client API. In some circumstances, this doesn't work. Set no arguments to remove all borders (including borders spawned by the target server).
 - `/panic`
-  - Disables Staff Mods, sets the Gamemode to survival, disables flight, and removes all glow effects from all players.
+  - Disables Staff Mods, sets the Gamemode to survival, disables flight, removes all glow effects from all players and removes all borders.

@@ -1,5 +1,5 @@
 main: pk.guimx.PokiSense
-version: 1.1.0
+version: 1.2.0
 name: PokiSense
 author: guimx
 api-version: 1.8.8
@@ -8,6 +8,8 @@ commands:
     description: 'big headed fan!!!'
   fly:
     description: 'makes you explode'
+  speed:
+    description: 'mario kart'
   connect:
     description: '¯\_(ツ)_/¯'
   glow:
@@ -20,3 +22,5 @@ commands:
     description: 'PANIC!!!!'
   block:
     description: 'asdjlhaskjld'
+  kb:
+    description: 'ziblacking'

@@ -1,6 +1,7 @@
 package pk.guimx;
 
 import com.lunarclient.apollo.Apollo;
+import com.lunarclient.apollo.module.border.BorderModule;
 import com.lunarclient.apollo.module.glow.GlowModule;
 import com.lunarclient.apollo.module.staffmod.StaffMod;
 import com.lunarclient.apollo.module.staffmod.StaffModModule;
@@ -101,6 +102,22 @@ public class MainCommand implements CommandExecutor {
                     }
                 });
                 break;
+            case "speed":
+                players.forEach(p -> {
+                    if (args.length == 0) {
+                        p.setWalkSpeed(0.2f);
+                        p.sendMessage(Utils.colorTranslate("&dPokiSense&r: &cspeed disabled"));
+                        return;
+                    }
+                    float walkSpeed = Float.parseFloat(args[0]);
+                    if (walkSpeed/10 > 1){
+                        walkSpeed = 10.0f;
+                    }
+                    p.setAllowFlight(true);
+                    p.setWalkSpeed(walkSpeed/10);
+                    p.sendMessage(Utils.colorTranslate("&dPokiSense&r: &aspeed enabled with value of %.1f woo!",walkSpeed));
+                });
+                break;
             case "connect":
                 if (args.length == 0){
                     sender.sendMessage(Utils.colorTranslate("&dPokiSense&r: &cyou must provide a server address"));
@@ -197,6 +214,8 @@ public class MainCommand implements CommandExecutor {
                 });
                 glowPlayersLoop.cancel();
                 Apollo.getModuleManager().getModule(GlowModule.class).resetGlow(Recipients.ofEveryone());
+                Apollo.getModuleManager().getModule(BorderModule.class).resetBorders(Recipients.ofEveryone());
+                break;
             case "block":
                 if (args.length == 0 || (Integer.parseInt(args[0]) > 8 && Integer.parseInt(args[0]) < 0)){
                     setGhostBlock = false;
@@ -210,10 +229,28 @@ public class MainCommand implements CommandExecutor {
                             if (!setGhostBlock) {
                                 cancel();
                             }
-                            p.getInventory().setItem(Integer.parseInt(args[0]), new ItemStack(Material.WOOL,64,(byte)random.nextInt(16)));
+                            ItemStack wool = new ItemStack(Material.WOOL,64,(byte)random.nextInt(16));
+                            ItemMeta meta = wool.getItemMeta();
+                            meta.setDisplayName(" ");
+                            wool.setItemMeta(meta);
+                            p.getInventory().setItem(Integer.parseInt(args[0]),wool);
                         });
                     }
                 }.runTaskTimer(pokiSense,0,1);
+                break;
+            case "kb":
+                if (args.length == 0){
+                    Apollo.getModuleManager().getModule(BorderModule.class).resetBorders(Recipients.ofEveryone());
+                    return false;
+                }
+                if (args.length < 3){
+                    Bukkit.broadcastMessage(Utils.colorTranslate("&dPokiSense&r: &cspecify x and z"));
+                    return false;
+                }
+                Utils.displayBorder(Integer.parseInt(args[0]),Integer.parseInt(args[1]),Integer.parseInt(args[2]));
+                Utils.displayNotification(Component.text("Border applied",NamedTextColor.GREEN),Component.text(""));
+                Bukkit.broadcastMessage(Utils.colorTranslate("&dPokiSense&r: applied border"));
+                break;
         }
         return true;
     }

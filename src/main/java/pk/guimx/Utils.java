@@ -3,6 +3,9 @@ package pk.guimx;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.lunarclient.apollo.Apollo;
+import com.lunarclient.apollo.common.cuboid.Cuboid2D;
+import com.lunarclient.apollo.module.border.Border;
+import com.lunarclient.apollo.module.border.BorderModule;
 import com.lunarclient.apollo.module.notification.Notification;
 import com.lunarclient.apollo.module.notification.NotificationModule;
 import com.lunarclient.apollo.player.ApolloPlayer;
@@ -12,6 +15,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -57,6 +61,26 @@ public class Utils {
                 .displayTime(Duration.ofSeconds(5))
                 .build());
     }
+
+    public static void displayBorder(int x, int z, int size) {
+        Apollo.getModuleManager().getModule(BorderModule.class).displayBorder(Recipients.ofEveryone(), Border.builder()
+                    .id("jajaja")
+                    .world("world")
+                    .cancelEntry(true)
+                    .cancelExit(true)
+                    .canShrinkOrExpand(false)
+                    .color(Color.RED)
+                    .bounds(Cuboid2D.builder()
+                            .minX(x-size)
+                            .minZ(z-size)
+                            .maxX(x+size)
+                            .maxZ(z+size)
+                            .build()
+                    )
+                    .build()
+            );
+    }
+
 }
 
 
