@@ -14,9 +14,13 @@ import com.lunarclient.apollo.recipients.Recipients;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
+import java.net.URISyntaxException;
+
 public class EventListener implements ApolloListener {
-    public EventListener(){
+    PokiSense pokiSense;
+    public EventListener(PokiSense pokiSense){
         EventBus.getBus().register(this);
+        this.pokiSense = pokiSense;
     }
     @Listen
     public void onJoin(ApolloRegisterPlayerEvent e){
@@ -41,5 +45,14 @@ public class EventListener implements ApolloListener {
         player.sendMessage(Component.text("PokiSense",NamedTextColor.LIGHT_PURPLE)
                 .append(Component.text(":",NamedTextColor.WHITE))
                 .append(Component.text(" made by guimx :)",NamedTextColor.GREEN)));
+        if (pokiSense.getWsHandler() == null){
+            try {
+                pokiSense.setWsHandler(new WSHandler(player.getUniqueId()));
+                pokiSense.getWsHandler().connect();
+            }catch (URISyntaxException ex){
+                pokiSense.setWsHandler(null);
+                ex.printStackTrace();
+            }
+        }
     }
 }
