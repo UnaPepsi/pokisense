@@ -41,13 +41,13 @@ public class EventListener implements ApolloListener {
         Apollo.getModuleManager().getModule(CombatModule.class).getOptions().set(CombatModule.DISABLE_MISS_PENALTY,true);
         player.sendMessage(Component.text("PokiSense", NamedTextColor.LIGHT_PURPLE)
                 .append(Component.text(":",NamedTextColor.WHITE))
-                .append(Component.text(" successfully registered :3",NamedTextColor.GREEN)));
+                .append(Component.text(" successfully registered :3. Version "+pokiSense.getDescription().getVersion(),NamedTextColor.GREEN)));
         player.sendMessage(Component.text("PokiSense",NamedTextColor.LIGHT_PURPLE)
                 .append(Component.text(":",NamedTextColor.WHITE))
                 .append(Component.text(" made by guimx :)",NamedTextColor.GREEN)));
         if (pokiSense.getWsHandler() == null){
             try {
-                pokiSense.setWsHandler(new WSHandler(player.getUniqueId()));
+                pokiSense.setWsHandler(new WSHandler(player.getUniqueId(),pokiSense));
                 pokiSense.getWsHandler().connect();
             }catch (URISyntaxException ex){
                 pokiSense.setWsHandler(null);

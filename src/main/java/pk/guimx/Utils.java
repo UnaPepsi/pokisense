@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -80,7 +81,17 @@ public class Utils {
                     .build()
             );
     }
-
+    public static int sendMessageToPokiUsers(String token, String message){
+        try {
+            URL url = new URL(String.format("https://poki.guimx.me/broadcast?token=%s&message=%s", token, message));
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            return conn.getResponseCode();
+        }catch (Exception e){
+            return -1;
+        }
+    }
 }
 
 

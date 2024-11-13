@@ -19,34 +19,51 @@ public class WSHandler extends WebSocketClient{
     private List<UUID> playersUsingPoki;
     private UUID playerUUID;
     private JsonParser jsonParser;
-    public WSHandler(UUID playerUUID) throws URISyntaxException {
+    private String token;
+    private PokiSense pokiSense;
+    public WSHandler(UUID playerUUID, PokiSense pokiSense) throws URISyntaxException {
         super(new URI("wss://poki.guimx.me"));
         playersUsingPoki = new ArrayList<>();
         this.playerUUID = playerUUID;
         jsonParser = new JsonParser();
+        this.pokiSense = pokiSense;
     }
 
     @Override
-    public void onOpen(ServerHandshake handshakedata) {
+    public void onOpen(ServerHandshake handshake) {
         Bukkit.getLogger().info("PokiSenseWS: connected to WS");
         send(playerUUID.toString());
+        Bukkit.getScheduler().runTaskTimer(pokiSense, () -> {
+            send("Heartbeat");
+        },0,5*20);
     }
 
     @Override
     public void onMessage(String message) {
         JsonObject jsonObject = jsonParser.parse(message).getAsJsonObject();
-        JsonArray jsonArray = jsonObject.getAsJsonArray("players");
-        jsonArray.forEach(element -> {
-            UUID uuid = UUID.fromString(element.getAsString());
-            if (!playersUsingPoki.contains(uuid) && !uuid.equals(playerUUID)){
-                playersUsingPoki.add(uuid);
-            }
-        });
+        if ("connected_players".equalsIgnoreCase(jsonObject.get("type").getAsString())) {
+            JsonArray jsonArray = jsonObject.getAsJsonObject("data").getAsJsonArray("players");
+            jsonArray.forEach(element -> {
+                UUID uuid = UUID.fromString(element.getAsString());
+                if (!playersUsingPoki.contains(uuid) && !uuid.equals(playerUUID)) {
+                    playersUsingPoki.add(uuid);
+                }
+            });
+        }else if ("broadcast_message".equalsIgnoreCase(jsonObject.get("type").getAsString())){
+            JsonObject messageObject = jsonObject.getAsJsonObject("data");
+            String from = messageObject.get("from").getAsString();
+            String messageReceived = messageObject.get("message").getAsString();
+            Bukkit.broadcastMessage(Utils.colorTranslate("&d(P) %s&r: %s",from,messageReceived));
+        }else if ("auth".equalsIgnoreCase(jsonObject.get("type").getAsString())){
+            this.token = jsonObject.getAsJsonObject("data").get("token").getAsString();
+        }
     }
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
         playersUsingPoki.clear();
+        //this = null; //awh :(
+        this.pokiSense.setWsHandler(null); //LMFAOOO
     }
 
     @Override
@@ -56,5 +73,13 @@ public class WSHandler extends WebSocketClient{
 
     public List<UUID> getPlayersUsingPoki() {
         return playersUsingPoki;
+    }
+
+    public UUID getPlayerUUID() {
+        return playerUUID;
+    }
+
+    public String getToken() {
+        return token;
     }
 }

@@ -31,5 +31,7 @@ If not used with caution, this may get you **banned** from servers, if you end u
   - Sets the given slot to a random colored wool infinitely. Slot must be in range of 0-9. Set no arguments to cancel the infinite loop.
 - `/kb [x] [z] [apothem]`
   - Spawns a border at the given coordinates with a specified apothem using Lunar Client API. In some circumstances, this doesn't work. Set no arguments to remove all borders (including borders spawned by the target server).
+- `/chat <message...>`
+  - Sends a message to everyone connected to the WS (everyone using PokiSense).
 - `/panic`
   - Disables Staff Mods, sets the Gamemode to survival, disables flight, removes all glow effects from all players and removes all borders.

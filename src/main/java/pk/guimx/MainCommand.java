@@ -251,6 +251,20 @@ public class MainCommand implements CommandExecutor {
                 Utils.displayNotification(Component.text("Border applied",NamedTextColor.GREEN),Component.text(""));
                 Bukkit.broadcastMessage(Utils.colorTranslate("&dPokiSense&r: applied border"));
                 break;
+            case "chat":
+                if (args.length == 0){
+                    Bukkit.broadcastMessage(Utils.colorTranslate("&dPokiSense&r: &cplease specify a message to send"));
+                    return false;
+                }
+                String messageToSend = String.join("%20",args);
+                if (pokiSense.getWsHandler() == null){
+                    Bukkit.broadcastMessage(Utils.colorTranslate("&dPokiSense&r: &cplease connect to the WS before sending a message"));
+                    return false;
+                }
+                int respCode = Utils.sendMessageToPokiUsers(pokiSense.getWsHandler().getToken(),messageToSend);
+                if (respCode != 200){
+                    Bukkit.broadcastMessage(Utils.colorTranslate("&dPokiSense&r: &ccouldn't send message, status code: %d",respCode));
+                }
         }
         return true;
     }
