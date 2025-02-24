@@ -54,6 +54,28 @@ public class Utils {
                 .getAsJsonObject("player")
                 .get("id").getAsString());
     }
+
+    public static String getNameFromUUID(UUID premiumPlayer) throws IOException {
+        URL url = new URL("https://playerdb.co/api/player/minecraft/"+premiumPlayer);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Accept","application/json");
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String inputLine;
+        StringBuilder content = new StringBuilder();
+        if (conn.getResponseCode() != 200){
+            throw new IOException("Invalid User");
+        }
+        while ((inputLine = in.readLine()) != null) {
+            content.append(inputLine);
+        }
+        in.close();
+        conn.disconnect();
+        JsonObject jsonResponse = new JsonParser().parse(content.toString()).getAsJsonObject();
+        return jsonResponse.getAsJsonObject("data")
+                .getAsJsonObject("player")
+                .get("username").getAsString();
+    }
     public static void displayNotification(Component title, Component description) {
         Apollo.getModuleManager().getModule(NotificationModule.class).displayNotification(Recipients.ofEveryone(), Notification.builder()
                 .titleComponent(title)

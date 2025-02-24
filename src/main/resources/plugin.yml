@@ -1,5 +1,5 @@
 main: pk.guimx.PokiSense
-version: 1.4.0
+version: 1.4.1
 name: PokiSense
 author: guimx
 api-version: 1.8.8

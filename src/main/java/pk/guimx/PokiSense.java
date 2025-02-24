@@ -13,13 +13,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class PokiSense extends JavaPlugin {
     private WSHandler wsHandler;
+    private Cache cache;
     public void onEnable(){
+        cache = new Cache();
         new EventListener(this);
         MainCommand mainCommand = new MainCommand(this);
         //I don't want prefixes
@@ -63,16 +66,25 @@ public class PokiSense extends JavaPlugin {
         Bukkit.getScheduler().runTaskTimer(this, () -> {
             if (wsHandler != null){
                 wsHandler.getPlayersUsingPoki().forEach(uuid -> {
-                    Apollo.getModuleManager().getModule(NametagModule.class).overrideNametag(Recipients.ofEveryone(),uuid, Nametag.builder()
-                            .lines(Lists.newArrayList(
-                                    Component.text()
-                                            .content("P >> ")
-                                            .color(NamedTextColor.LIGHT_PURPLE)
-                                            .append(Component.text(Bukkit.getOfflinePlayer(uuid).getName(),NamedTextColor.GREEN))
-                                            .build()
-                            ))
-                            .build()
-                    );
+                    try {
+                        String p;
+                        if (getCache().getCachedUUIDs().containsValue(uuid)) {
+                            p = getCache().getCachedUUIDs().entrySet().stream().filter(entry -> entry.getValue().equals(uuid)).findFirst().get().getKey();
+                        } else {
+                            p = Utils.getNameFromUUID(uuid);
+                            getCache().getCachedUUIDs().put(p, uuid);
+                        }
+                        Apollo.getModuleManager().getModule(NametagModule.class).overrideNametag(Recipients.ofEveryone(), uuid, Nametag.builder()
+                                .lines(Lists.newArrayList(
+                                        Component.text()
+                                                .content("P >> ")
+                                                .color(NamedTextColor.LIGHT_PURPLE)
+                                                .append(Component.text(p, NamedTextColor.GREEN))
+                                                .build()
+                                ))
+                                .build()
+                        );
+                    } catch (IOException ignored) {}
                 });
             }
         },0,70);
@@ -91,5 +103,9 @@ public class PokiSense extends JavaPlugin {
 
     public void setWsHandler(WSHandler wsHandler) {
         this.wsHandler = wsHandler;
+    }
+
+    public Cache getCache() {
+        return cache;
     }
 }

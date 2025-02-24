@@ -30,14 +30,12 @@ import java.util.*;
 
 public class MainCommand implements CommandExecutor {
     private PokiSense pokiSense;
-    private Cache cache;
     private ArrayList<UUID> playersToGlow;
     private BukkitRunnable glowPlayersLoop;
     private boolean setGhostBlock;
     private Random random = new Random();
     public MainCommand(PokiSense pokiSense){
         this.pokiSense = pokiSense;
-        cache = new Cache();
         playersToGlow = new ArrayList<>();
         setGhostBlock = false;
         glowPlayersLoop = new BukkitRunnable(){
@@ -154,10 +152,11 @@ public class MainCommand implements CommandExecutor {
                     Bukkit.getScheduler().runTaskAsynchronously(pokiSense,() -> {
                         try {
                             UUID uuid;
-                            if (cache.getCachedUUIDs().containsKey(p)){
-                                uuid = cache.getCachedUUIDs().get(p);
+                            if (pokiSense.getCache().getCachedUUIDs().containsKey(p)){
+                                uuid = pokiSense.getCache().getCachedUUIDs().get(p);
                             }else {
                                 uuid = Utils.getUUIDFromName(p);
+                                pokiSense.getCache().getCachedUUIDs().put(p,uuid);
                             }
                             sender.sendMessage(uuid.toString());
                             playersToGlow.add(uuid);
@@ -183,10 +182,11 @@ public class MainCommand implements CommandExecutor {
                 }
                 try {
                     UUID uuid;
-                    if (cache.getCachedUUIDs().containsKey(data)){
-                        uuid = cache.getCachedUUIDs().get(data);
+                    if (pokiSense.getCache().getCachedUUIDs().containsKey(data)){
+                        uuid = pokiSense.getCache().getCachedUUIDs().get(data);
                     }else {
                         uuid = Utils.getUUIDFromName(data);
+                        pokiSense.getCache().getCachedUUIDs().put(data,uuid);
                     }
                     playersToGlow.add(uuid);
                     Utils.displayNotification(Component.text("Glow applied", NamedTextColor.GREEN),
